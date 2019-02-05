@@ -1,9 +1,13 @@
-package io;
+package hc;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.InputStreamBitSource;
+import io.InsufficientBitsLeftException;
+
 import java.util.*;
 
 public class Decoder {

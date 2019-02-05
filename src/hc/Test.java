@@ -1,9 +1,12 @@
-package io;
+package hc;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+
+import io.InputStreamBitSource;
+import io.InsufficientBitsLeftException;
 
 public class Test {
 
