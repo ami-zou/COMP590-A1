@@ -14,6 +14,7 @@ public class Decoder {
     Node root;
     StringBuilder message;
     List<Node> nodeList;
+    int total;
     
     /* Algorithms:
     1. A loop to read the first 256 bytes (8 bits each)
@@ -45,26 +46,46 @@ public class Decoder {
         message = new StringBuilder();
 
         nodeList = new ArrayList<Node>();
-        
+        this.total = 0;
         //System.out.println("Just checking: " + (char)-1);
     }
-    
-    public void decode(InputStream stream) throws InsufficientBitsLeftException, IOException{
-    	readBits(stream);
-    	constructHuffmanTree();
-    }
 
-    private void readBits(InputStream stream) throws InsufficientBitsLeftException, IOException{
+    public void decode(InputStream stream) throws InsufficientBitsLeftException, IOException{
     	InputStreamBitSource inputReader = new InputStreamBitSource(stream);
     	nodeList = new ArrayList<Node>();
     	
     	for(int i = 0; i < 256; i++) {
     		int len = inputReader.next(8); //read one byte -- 8
     		char symbol = (char)i;
-    		System.out.println("Index i: " + i + ", symbol: "+ symbol+", with length " + len);
+    		//System.out.println("Index i: " + i + ", symbol: "+ symbol+", with length " + len);
     		Node node = new Node(i, len);
-    		System.out.println("Create node with symbol " + node.getSymbol());
+    		//System.out.println("Create node with symbol " + node.getSymbol());
     		nodeList.add(node);
+    	}
+    	
+    	this.total = inputReader.next(32);
+    	System.out.println("Total decoding letters: " + total);
+    	
+    	constructHuffmanTree();
+    	
+    	int num = 0;
+    	Node curr = root;
+    	while(num < 300) {
+    		int bit = inputReader.next(1);
+    		System.out.println("decoding " + bit);
+    		if(bit == 0) { //go left
+    			curr = curr.left;
+    		}else { //go right
+    			curr = curr.right;
+    		}
+    		
+    		if(curr.isLeaf()) { //output this. increase counter. reset curr to root
+    			char symbol = curr.symbol;
+    			System.out.println(symbol);
+    			//TODO: output this!
+    			num++;
+    			curr = root;
+    		}	
     	}
     }
     
@@ -101,17 +122,28 @@ public class Decoder {
     	
     	//List<List> tree
     	
-    	int i = 0;
-    	for(int h = 0; h < H; h++) { //Notice: each level contains 2^h nodes (Math.pow(2,h))
-    								 //Iterating from the parent level and insert to its children
-    		int num = 1;
-    		while(num <= Math.pow(2, h)) {
-    			num++;
-    		}
+    	for(Node n : nodeList) {
+    		root.insert(n, n.getLength());
     	}
+    	
+    	//Todo: do a print to check
+    	System.out.println("Now checking the tree");
+    	printPreorder(root);
+    	
+    	//Step 3: decode!
     }
-
-    public String getDecodedMessage(){
-        return message.toString();
-    }
+    
+    private void printPreorder(Node node) { 
+        if (node == null) 
+            return; 
+  
+        /* first print data of node */
+        System.out.print(node.symbol + " "); 
+  
+        /* then recur on left subtree */
+        printPreorder(node.left); 
+  
+        /* now recur on right subtree */
+        printPreorder(node.right); 
+    } 
 }
