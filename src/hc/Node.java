@@ -6,7 +6,7 @@ public class Node {
     int ascii;
     char symbol;
     int length;
-    boolean isLeaf;
+    boolean isSym;
 
     public Node(int ascii, int length, Node left, Node right){
         this.ascii = ascii;
@@ -16,9 +16,9 @@ public class Node {
         this.symbol = (char) this.ascii;
         //this.isLeaf = (ascii == -1)? false : true;
         if(ascii == -1) {
-        	this.isLeaf = false;
+        	this.isSym = false;
         }else {
-        	this.isLeaf = true;
+        	this.isSym = true;
         }
     }
 
@@ -41,23 +41,26 @@ public class Node {
     		if(left == null) {
     			left = internal;
     			internal.insert(node, depth-1);
-    		}else if(right == null) { //can either go left or go right
+    		}else if(!left.isFull()) { //not full subtree, can insert here
+    			left.insert(node, depth-1);
+    		}else if(right == null) { //left full, check if we can insert right
     			right = internal;
     			internal.insert(node, depth-1);
     		}else {
-    			left.insert(node, depth-1);
     			right.insert(node, depth-1);
     		}
     	}
     	return;
     }
 
-    public boolean isFull(){
-        return (left != null && right != null);
-    }
-
-    public boolean isLeftFull(){
-        return left != null;
+    public boolean isFull(){ //for each node, if it is leaf or if both children are leaves = full
+        if (isSym) {
+        	return true;
+        }else if (left == null || right == null){
+        	return false;
+        }else {
+        	return (left.isFull() && right.isFull() );
+        }
     }
 
     public void addLeft(Node left){
@@ -88,7 +91,7 @@ public class Node {
     	return length;
     }
     
-    public boolean isLeaf() {
-    	return isLeaf;
+    public boolean isSym() {
+    	return isSym;
     }
 }

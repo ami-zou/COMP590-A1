@@ -1,5 +1,7 @@
 package hc;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -12,7 +14,6 @@ import java.util.*;
 
 public class Decoder {
     Node root;
-    StringBuilder message;
     List<Node> nodeList;
     int total;
     
@@ -43,15 +44,14 @@ public class Decoder {
     
     public Decoder(){
         this.root = new Node(-1, 0);
-        message = new StringBuilder();
-
         nodeList = new ArrayList<Node>();
         this.total = 0;
-        //System.out.println("Just checking: " + (char)-1);
     }
 
-    public void decode(InputStream stream) throws InsufficientBitsLeftException, IOException{
-    	InputStreamBitSource inputReader = new InputStreamBitSource(stream);
+    public void decode(String input_file_name, String output_file_name) throws InsufficientBitsLeftException, IOException{
+    	InputStream fis = new FileInputStream(input_file_name);
+    	InputStreamBitSource inputReader = new InputStreamBitSource(fis);
+    	
     	nodeList = new ArrayList<Node>();
     	
     	for(int i = 0; i < 256; i++) {
@@ -66,27 +66,37 @@ public class Decoder {
     	this.total = inputReader.next(32);
     	System.out.println("Total decoding letters: " + total);
     	
+    	//Construct the tree
     	constructHuffmanTree();
+    	
+    	//Decode + Output the file
+    	FileOutputStream fos = new FileOutputStream(output_file_name);
     	
     	int num = 0;
     	Node curr = root;
-    	while(num < 300) {
+    	while(num < total) {
     		int bit = inputReader.next(1);
-    		System.out.println("decoding " + bit);
+    		//System.out.println("decoding " + bit);
     		if(bit == 0) { //go left
     			curr = curr.left;
     		}else { //go right
     			curr = curr.right;
     		}
     		
-    		if(curr.isLeaf()) { //output this. increase counter. reset curr to root
+    		if(curr.isSym()) { //output this. increase counter. reset curr to root
     			char symbol = curr.symbol;
-    			System.out.println(symbol);
-    			//TODO: output this!
+    			//System.out.println(symbol);
+    			
+    			fos.write(symbol);
+
     			num++;
     			curr = root;
     		}	
     	}
+    	
+    	fos.flush();
+		fos.close();
+		fis.close();
     }
     
     private void constructHuffmanTree() {
