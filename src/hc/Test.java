@@ -12,12 +12,16 @@ public class Test {
 
     public static void main(String[] args) throws InsufficientBitsLeftException, IOException {
         Decoder decoder = new Decoder();
+        Encoder encoder = new Encoder();
 
-        String input_file_name ="/Users/ami_zou/Desktop/COMP590/HW/comp590sp19-a1/data/compressed.dat";
-        InputStream stream = new FileInputStream(input_file_name);
+        String decode_input_filename ="/Users/ami_zou/Desktop/COMP590/HW/comp590sp19-a1/data/compressed.dat";
+        String decode_output_filename = "/Users/ami_zou/Desktop/COMP590/HW/comp590sp19-a1/data/uncompressed.txt";
+
+        decoder.decode(decode_input_filename, decode_output_filename);
         
-        String output_file_name = "/Users/ami_zou/Desktop/COMP590/HW/comp590sp19-a1/data/uncompressed.txt";
-
-        decoder.decode(input_file_name, output_file_name);
+        String encode_input_filename = "/Users/ami_zou/Desktop/COMP590/HW/comp590sp19-a1/data/uncompressed.txt";
+        String encode_output_filename = "/Users/ami_zou/Desktop/COMP590/HW/comp590sp19-a1/data/recompressed.dat";
+        
+        encoder.encode(encode_input_filename, encode_output_filename);
     }
 }

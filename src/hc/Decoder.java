@@ -55,6 +55,8 @@ public class Decoder {
     	InputStreamBitSource inputReader = new InputStreamBitSource(fis);
     	
     	nodeList = new ArrayList<Node>();
+    	root = new Node(-1,0);
+    	total = 0;
     	
     	//read one byte (8 bits) for each symbol -- 256 in total
     	for(int i = 0; i < 256; i++) {
@@ -65,6 +67,7 @@ public class Decoder {
     	
     	//read the next 4 bytes (32 bits) for the total length
     	this.total = inputReader.next(32); 
+    	//System.out.println("[ Decoder ] Total number of symbols is " + total);
     	
     	//Construct the tree
     	constructHuffmanTree();
