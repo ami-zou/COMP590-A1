@@ -14,12 +14,7 @@ public class Node {
         this.left = left;
         this.right = right;
         this.symbol = (char) this.ascii;
-        //this.isLeaf = (ascii == -1)? false : true;
-        if(ascii == -1) {
-        	this.isSym = false;
-        }else {
-        	this.isSym = true;
-        }
+        this.isSym = (ascii == -1)? false : true;   
     }
 
     public Node(int ascii, int length){
@@ -27,7 +22,7 @@ public class Node {
     }
     
     public void insert(Node node, int depth) {
-    	if(depth==1) { //needs to insert now
+    	if(depth==1) { //One more layer left, needs to insert the node now!!
     		if(left == null) { //insert left
     			left = node;
     		}else if(right == null){
@@ -35,7 +30,7 @@ public class Node {
     		}else { //we are at a full node ==> not possible to insert
     			return;
     		}
-    	}else { //needs to move one step down and recursively inserting
+    	}else { //needs to move one step down and recursively insert the node
     		Node internal = new Node(-1, 0);
     		
     		if(left == null) {
@@ -53,7 +48,7 @@ public class Node {
     	return;
     }
 
-    public boolean isFull(){ //for each node, if it is leaf or if both children are leaves = full
+    public boolean isFull(){ //for each node, if it is a symbol or if both children are symbols = full
         if (isSym) {
         	return true;
         }else if (left == null || right == null){
