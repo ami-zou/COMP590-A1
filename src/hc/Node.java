@@ -1,24 +1,72 @@
 package hc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Node {
     Node left; //0
     Node right; //1
     int ascii;
     char symbol;
-    int length;
+    int length; //from Root to this node
     boolean isSym;
+    int height; //depth from this node to its longest leaf
+    double prob;
+    List<Integer> encode;
 
     public Node(int ascii, int length, Node left, Node right){
         this.ascii = ascii;
-        this.length = length;
+        this.length = length; //from Root to this node
+        this.height = 0; //depth from this node to its longest leaf
         this.left = left;
         this.right = right;
         this.symbol = (char) this.ascii;
-        this.isSym = (ascii == -1)? false : true;   
+        this.isSym = (ascii == -1)? false : true; 
+        this.prob = 0;
+        this.encode = new ArrayList<Integer>();
+    }
+    
+    public void addEncodeBit(int bit) {
+    	encode.add(bit);
     }
 
     public Node(int ascii, int length){
         this(ascii, length, null, null);
+    }
+    
+    public Node(int ascii, int count, int total) {
+    	this(ascii, 0, null, null);
+    	isSym = true;
+    	updateProbability(count, total);
+    }
+    
+    public Node(double prob, Node left, Node right) {
+    	this(-1, 0, left, right); //left right could be null
+    	
+    	int leftH = (left==null)? -1 : left.getHeight();
+    	int rightH = (right==null)? -1 : right.getHeight();
+    	int height = Math.max(leftH, rightH) + 1;
+    	this.height = height;
+    	this.prob = prob;
+    }
+    
+    public Node(double prob, Node left, Node right, int height) {
+    	this(-1, 0, left, right);
+    	this.height = height;
+    	this.prob = prob;
+    }
+    
+    private void updateProbability(int count, int total) {
+    	this.prob = (double)count/(double)total; //Node: need to cast it before dividing
+    	//this.prob = (double) count;
+    }
+    
+    public double getProbability() {
+    	return prob;
+    }
+    
+    public List<Integer> getEncoding(){
+    	return encode;
     }
     
     public void insert(Node node, int depth) {
@@ -88,5 +136,24 @@ public class Node {
     
     public boolean isSym() {
     	return isSym;
+    }
+    
+/*    public int getHeight() {
+    	
+    	if(isSym || this.left==null || this.right==null) {
+    		this.height = 0;
+    	}else {
+    	//if(!isSym) { //not leaf node, o/w height = 0
+    		int leftH = (this.left == null)? -1 : this.left.getHeight();
+    		int rightH = (this.right == null)? -1 : this.right.getHeight();
+    		
+    		this.height = Math.max(leftH, rightH)+1;
+    	}
+    	
+    	return this.height;
+    }
+*/
+    public int getHeight() {
+    	return height;
     }
 }
