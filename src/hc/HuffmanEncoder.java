@@ -20,10 +20,11 @@ public class HuffmanEncoder {
 		// with each symbol. Create canonical tree using code lengths.
 		// Use canonical tree to form codes as strings of 0 and 1
 		// characters that are inserted into _code_map.
+		
 
 		// Start with an empty list of nodes
 		
-		List<HuffmanNode> node_list = new ArrayList<HuffmanNode>();
+		List<Node> node_list = new ArrayList<Node>();
 		
 		// Create a leaf node for each symbol, encapsulating the
 		// frequency count information into each leaf.
@@ -60,7 +61,7 @@ public class HuffmanEncoder {
 
 		// Now construct the canonical tree as you did in HuffmanDecodeTree constructor
 		
-		InternalHuffmanNode canonical_root = new InternalHuffmanNode();
+		Node canonical_root = new Node(-1,0); //internal root node
 		
 
 		// If all went well, tree should be full.
