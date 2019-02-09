@@ -12,7 +12,7 @@ public class Node {
     boolean isSym;
     int height; //depth from this node to its longest leaf
     double prob;
-    List<Integer> encode;
+    StringBuilder encode;
 
     public Node(int ascii, int length, Node left, Node right){
         this.ascii = ascii;
@@ -23,11 +23,11 @@ public class Node {
         this.symbol = (char) this.ascii;
         this.isSym = (ascii == -1)? false : true; 
         this.prob = 0;
-        this.encode = new ArrayList<Integer>();
+        this.encode = new StringBuilder();
     }
     
     public void addEncodeBit(int bit) {
-    	encode.add(bit);
+    	encode.append(bit);
     }
 
     public Node(int ascii, int length){
@@ -65,7 +65,7 @@ public class Node {
     	return prob;
     }
     
-    public List<Integer> getEncoding(){
+    public StringBuilder getEncoding(){
     	return encode;
     }
     
