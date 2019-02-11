@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import io.InputStreamBitSource;
 import io.InsufficientBitsLeftException;
@@ -58,6 +59,14 @@ public class Decoder {
     	root = new Node(-1,0);
     	total = 0;
     	
+    	int[] symbol_counts = new int[256];
+    	int[] code_lengths = new int[256];
+    	for(int i = 0; i < 256; i ++) {
+    		symbol_counts[i]=0;
+    		code_lengths[i]=0;
+    	}
+    	
+    	
     	//read one byte (8 bits) for each symbol -- 256 in total
     	for(int i = 0; i < 256; i++) {
     		int len = inputReader.next(8); 
@@ -77,9 +86,11 @@ public class Decoder {
     	
     	int num = 0;
     	Node curr = root;
+    	
+    	int len = 1;
     	while(num < total) {
     		int bit = inputReader.next(1);
-
+    		
     		//Reading the bit: 0 goes left and 1 goes right
     		if(bit == 0) {
     			curr = curr.left;
@@ -87,9 +98,20 @@ public class Decoder {
     			curr = curr.right;
     		}
     		
+    		len++;
+    		
     		//Output this symbol; increase counter; reset curr node to root
     		if(curr.isSym()) { 
+    			//update length
+    			if(code_lengths[curr.ascii]==0) {
+    				code_lengths[curr.ascii] = len;
+    			}
+    			len = 1;
+    			
     			char symbol = curr.symbol;
+    			
+    			int count = symbol_counts[curr.ascii];
+    			symbol_counts[curr.ascii] = count+1; //counting
     			
     			fos.write(symbol);
 
@@ -101,6 +123,22 @@ public class Decoder {
     	fos.flush();
 		fos.close();
 		fis.close();
+		
+		// Calculate the entropy:
+		for(int i = 0; i < 256; i ++) {
+			System.out.println("Symbol i " + i + " : " + (char)i + " has counts " + symbol_counts[i] + " and length " + code_lengths[i]);
+    	}
+		
+		double entropy = 0.0;
+		for(int i = 0; i < 256; i ++) {
+			double length = (double) code_lengths[i];				
+			double count = (double) symbol_counts[i];
+			entropy += length*count;
+		}
+				
+		entropy = entropy/(double)total;
+				
+		System.out.println("The given encoder has entropy " + entropy);
     }
     
     private void constructHuffmanTree() {

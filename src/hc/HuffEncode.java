@@ -79,9 +79,10 @@ public class HuffEncode {
 		fis.close();
 		fos.close();
 		
-		System.out.println("Finish encoding " + num_symbols + " letters!");
+		System.out.println("Finished encoding " + num_symbols + " letters!");
 		String new_output_file_name = "/Users/ami_zou/Desktop/COMP590/HW/comp590sp19-a1/data/new_uncompressed.txt";
-		//testDecode(output_file_name, new_output_file_name);
+		testDecode(output_file_name, new_output_file_name);
+		System.out.println("Finished decoding!");
 	}
 	
 	public static void testDecode(String input_file_name, String output_file_name) throws InsufficientBitsLeftException, IOException {

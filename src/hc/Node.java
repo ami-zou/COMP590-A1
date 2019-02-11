@@ -40,6 +40,11 @@ public class Node {
     	updateProbability(count, total);
     }
     
+    public Node(int ascii, int length, double probability) {
+    	this(ascii, length, null, null);
+    	this.prob = probability;
+    }
+    
     public Node(double prob, Node left, Node right) {
     	this(-1, 0, left, right); //left right could be null
     	

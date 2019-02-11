@@ -10,6 +10,9 @@ import java.util.*;
 import io.InputStreamBitSource;
 import io.OutputStreamBitSink;
 
+/*
+ * Not working properly! Check out HuffmanEncoder
+ */
 public class Encoder {
 	private int[] symbol_counts; //symbol index --> count
 	
@@ -184,7 +187,7 @@ public class Encoder {
 	 * b. Store the encoding info //Update symbolTable
 	 */
 	private void encodingHuffmanTree(Node node) {
-		if(node.getHeight()==0 && node.getAscii()!=-1 ) { //node.getAscii()!=-1 is this needed??
+		if(node.isSym) { //node.getAscii()!=-1 is this needed??
 			System.out.println("Index is " +  node.getAscii());
 			if(node.getAscii()==-1) return;
 			
@@ -230,7 +233,7 @@ public class Encoder {
 	}
 	
 	private void updateEncodingTable(Node node) { //Node only has info: ascii and len --> else need to be 
-		if(node.getHeight()==0 && node.getAscii()!=-1) { //node.getAscii()!=-1 needed?
+		if(node.isSym) { //node.getAscii()!=-1 needed?
 			int symbol = node.getAscii();
 			
 			StringBuilder encoding = node.getEncoding();
